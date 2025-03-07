@@ -12,3 +12,13 @@ Future<User?> firebaseSignIn(
 Future<void> firebaseSignOut() async {
   await FirebaseAuth.instance.signOut();
 }
+
+Future<void> firebaseCreateAccount({
+  required String email,
+  required String password,
+}) async {
+  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    email: email,
+    password: password,
+  );
+}
