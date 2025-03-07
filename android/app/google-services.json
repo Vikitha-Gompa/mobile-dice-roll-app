@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979867775834",
+    "project_id": "vgompa-cmsc5303-flutter",
+    "storage_bucket": "vgompa-cmsc5303-flutter.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979867775834:android:17ee2db7f99888c796f963",
+        "android_client_info": {
+          "package_name": "edu.uco.vgompa.cmsc5303.lesson6"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1Yfz_fMiek55HLMsOIGZf6vm0W4RmFzg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
