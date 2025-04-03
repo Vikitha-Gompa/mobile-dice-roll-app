@@ -29,10 +29,28 @@ class HomeState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text('Home'),
       ),
-      body: PopScope(
-          canPop: false, // disable system back button
-          child: Text(model.user.email!)),
+      body: bodyView(context),
       drawer: drawerView(context),
+    );
+  }
+
+  Widget bodyView(BuildContext context) {
+    return PopScope(
+      canPop: false, // disable system back button
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(model.user.email!),
+            Text('Welcome to Dice Game!'),
+            SizedBox(height: 20), // Adds spacing
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('Enter Game Room'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
