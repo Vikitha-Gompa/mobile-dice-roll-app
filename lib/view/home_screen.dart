@@ -33,7 +33,7 @@ class HomeState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dice Betting Game'),
+        title: const Text('Home'),
       ),
       body: bodyView(context),
       drawer: drawerView(context),
@@ -47,8 +47,17 @@ class HomeState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(modal.user.email!),
-            Text('Welcome to Dice Game!'),
+            Text(
+              modal.user.email!,
+              style: const TextStyle(fontSize: 30, color: Colors.black),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Welcome to Dice Game!',
+              style: const TextStyle(fontSize: 30, color: Colors.black),
+            ),
             SizedBox(height: 20), // Adds spacing
             ElevatedButton(
               onPressed: () {

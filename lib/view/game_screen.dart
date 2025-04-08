@@ -44,43 +44,79 @@ class GameBodyView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Balance: \$${model.balance}'),
+          Text(
+            'Balance: \$${model.balance}'
+            '${(model.showKey) ? ' (key: \$${model.key})' : ''}',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+
           const SizedBox(height: 10),
-          CircleAvatar(
-            radius: 100,
-            backgroundColor: Colors.blue,
-            child: model.gameState == GameState.DONE
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        model.showKey || con.screenState.forceShowKey
-                            ? '${model.key}' // Show key if showKey is true
-                            : '?',
-                        style: const TextStyle(fontSize: 20, color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        model.progressMessage.isNotEmpty
-                            ? model
-                                .progressMessage // Show progress message when game is done
-                            : 'Choose Bet(s) and press [PLAY]',
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.yellow),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  )
-                : Text(
-                    //model.gameState == GameState.INIT ? '?' : '',
-                    model.showKey || con.screenState.forceShowKey
-                        ? '${model.key}' // Show key if showKey is true
-                        : '?',
-                    style: const TextStyle(fontSize: 20, color: Colors.red),
-                    textAlign: TextAlign.center,
-                  ),
+          Container(
+            width: 200, // or use double the radius of CircleAvatar
+            height: 200,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white, // Outer background color
+              border: Border.all(
+                color: Colors.black, // Border color
+                width: 6, // Border width
+              ),
+            ),
+            child: CircleAvatar(
+              radius: 100,
+              backgroundColor: Colors.blue,
+              child: model.gameState == GameState.DONE
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          model.showKey || con.screenState.forceShowKey
+                              ? '${model.key}' // Show key if showKey is true
+                              : '?',
+                          style:
+                              const TextStyle(fontSize: 50, color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 3),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: (model.progressMessage.isNotEmpty
+                                  ? model.progressMessage.split('\n')
+                                  : ['Choose Bet(s) and press [PLAY]'])
+                              .map((line) => Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 3),
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.yellow,
+                                        width: 2,
+                                      ),
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      line,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.yellow,
+                                      ),
+                                      //textAlign: TextAlign.center,
+                                    ),
+                                  ))
+                              .toList(),
+                        )
+                      ],
+                    )
+                  : Text(
+                      model.gameState == GameState.INIT ? '?' : '',
+                      //  model.showKey || con.screenState.forceShowKey
+                      //     ? '${model.key}' // Show key if showKey is true
+                      //     : '?',
+                      style: const TextStyle(fontSize: 80, color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+            ),
           ),
           const SizedBox(height: 10),
           Row(
@@ -94,7 +130,10 @@ class GameBodyView extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          const Text('Bet on even/odd: 2x winnings'),
+          const Text(
+            'Bet on even/odd: 2x winnings',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           Column(
             children: [
               Row(
@@ -120,49 +159,55 @@ class GameBodyView extends StatelessWidget {
               ),
               const SizedBox(
                   height: 5), // Space between radio buttons and dropdown
-              DropdownButton<int>(
-                value: model.betOnOddEven == 0
-                    ? null
-                    : model
-                        .betOnOddEven, // Default to null when no bet is selected
-                hint: const Text('Select Bet on Even/Odd'),
-                disabledHint: Text(
-                  model.betOnOddEven == 0
-                      ? 'Select Bet on Even/Odd'
-                      : '\$${model.betOnOddEven}',
-                ),
+              Container(
+                color: const Color.fromARGB(255, 139, 201, 230),
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                child: DropdownButton<int>(
+                  value: model.betOnOddEven == 0
+                      ? null
+                      : model
+                          .betOnOddEven, // Default to null when no bet is selected
+                  hint: const Text('Select Bet on Even/Odd'),
+                  disabledHint: Text(
+                    model.betOnOddEven == 0
+                        ? 'Select Bet on Even/Odd'
+                        : '\$${model.betOnOddEven}',
+                  ),
 
-                items: [
-                  null, // Represent the "Select Bet" option with null
-                  10, 20, 30,
-                ].map((amount) {
-                  return DropdownMenuItem(
-                    value: amount,
-                    child: Text(
-                      amount == null
-                          ? 'Select Bet on Even/Odd'
-                          : '\$$amount', // Display "Select Bet" for null
-
-                      // Colors.blue, // Blue color for selected items
-                    ),
-                  );
-                }).toList(),
-                onChanged: model.radioEnabled
-                    ? (amount) {
-                        if (amount != null) {
-                          con.onSetOddEvenBet(
-                              amount); // Only update if amount is not null
-                        } else {
-                          con.onSetOddEvenBet(
-                              0); // Reset bet when "Select Bet" is chosen
+                  items: [
+                    null, // Represent the "Select Bet" option with null
+                    10, 20, 30,
+                  ].map((amount) {
+                    return DropdownMenuItem(
+                      value: amount,
+                      child: Text(
+                        amount == null
+                            ? 'Select Bet on Even/Odd'
+                            : '\$$amount', // Display "Select Bet" for null
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: model.radioEnabled
+                      ? (amount) {
+                          if (amount != null) {
+                            con.onSetOddEvenBet(
+                                amount); // Only update if amount is not null
+                          } else {
+                            con.onSetOddEvenBet(
+                                0); // Reset bet when "Select Bet" is chosen
+                          }
                         }
-                      }
-                    : null,
+                      : null,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 10),
-          const Text('Bet on range: 3x winnings'),
+          const Text(
+            'Bet on range: 3x winnings',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
           Column(
             children: [
               Row(
@@ -196,45 +241,50 @@ class GameBodyView extends StatelessWidget {
               ),
               const SizedBox(
                   height: 5), // Space between radio buttons and dropdown
-              DropdownButton<int>(
-                value: model.betOnRange == 0
-                    ? null
-                    : model
-                        .betOnRange, // Default to null when no bet is selected
-                hint: const Text('Select Bet on Range'),
-                disabledHint: Text(
-                  model.betOnRange == 0
-                      ? 'Select Bet on Range'
-                      : '\$${model.betOnRange}',
-                ),
-                items: [
-                  null, // Represent the "Select Bet" option with null
-                  10, 20, 30,
-                ].map((amount) {
-                  return DropdownMenuItem(
-                    value: amount,
-                    child: Text(amount == null
+              Container(
+                color: const Color.fromARGB(255, 139, 201, 230),
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+                child: DropdownButton<int>(
+                  value: model.betOnRange == 0
+                      ? null
+                      : model
+                          .betOnRange, // Default to null when no bet is selected
+                  hint: const Text('Select Bet on Range'),
+                  disabledHint: Text(
+                    model.betOnRange == 0
                         ? 'Select Bet on Range'
-                        : '\$$amount'), // Display "Select Bet" for null
-                  );
-                }).toList(),
-                onChanged: model.radioEnabled
-                    ? (amount) {
-                        if (amount != null) {
-                          con.onSetRangeBet(
-                              amount); // Only update if amount is not null
-                        } else {
-                          con.onSetRangeBet(
-                              0); // Reset bet when "Select Bet" is chosen
+                        : '\$${model.betOnRange}',
+                  ),
+                  items: [
+                    null, // Represent the "Select Bet" option with null
+                    10, 20, 30,
+                  ].map((amount) {
+                    return DropdownMenuItem(
+                      value: amount,
+                      child: Text(
+                        amount == null ? 'Select Bet on Range' : '\$$amount',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ), // Display "Select Bet" for null
+                    );
+                  }).toList(),
+                  onChanged: model.radioEnabled
+                      ? (amount) {
+                          if (amount != null) {
+                            con.onSetRangeBet(
+                                amount); // Only update if amount is not null
+                          } else {
+                            con.onSetRangeBet(
+                                0); // Reset bet when "Select Bet" is chosen
+                          }
                         }
-                      }
-                    : null,
+                      : null,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          Text(model.progressMessage),
-          const SizedBox(height: 10),
+          // Text(model.progressMessage),
+          // const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

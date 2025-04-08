@@ -40,7 +40,7 @@ class HomeController {
   void onPressedPlay() {
     screenState.callSetState(() {
       screenState.model.gameState = GameState.PLAYING;
-      //int winAmount = screenState.model.getGameResult();
+      screenState.model.getGameResult();
       int key = screenState.model.key;
 
       screenState.forceShowKey = true;
@@ -54,8 +54,10 @@ class HomeController {
         bool betCorrect = isKeyEven == screenState.model.even;
         String label = screenState.model.even ? 'Even' : 'Odd';
         oddEvenResult = betCorrect
-            ? 'You won on $label \$${screenState.model.betOnOddEven}'
-            : 'You lost on $label \$${screenState.model.betOnOddEven}';
+            ? 'You won on $label: \$${screenState.model.betOnOddEven * 2} '
+            : 'You lost on $label: \$${screenState.model.betOnOddEven} ';
+      } else {
+        oddEvenResult = 'No Bet Placed on Odd/Even';
       }
 
       // Range result message
@@ -73,8 +75,10 @@ class HomeController {
             break;
         }
         rangeResult = betCorrect
-            ? 'You won on ${screenState.model.range} \$${screenState.model.betOnRange}'
-            : 'You lost on ${screenState.model.range} \$${screenState.model.betOnRange}';
+            ? 'You won on range ${screenState.model.range}: \$${screenState.model.betOnRange * 3}'
+            : 'You lost on range ${screenState.model.range}: \$${screenState.model.betOnRange}';
+      } else {
+        rangeResult = ' No Bet Placed on Range';
       }
 
       screenState.model.radioEnabled = false;
