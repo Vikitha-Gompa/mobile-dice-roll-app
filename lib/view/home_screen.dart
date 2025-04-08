@@ -14,20 +14,26 @@ class HomeScreen extends StatefulWidget {
 
 class HomeState extends State<HomeScreen> {
   late HomeController con;
-  late HomeModel model;
+  late GameModel model;
+  late HomeModel modal;
 
   @override
   void initState() {
     super.initState();
+    model = GameModel();
+    model.betOnOddEven = 0; // Default to a valid value
+    model.betOnRange = 0; // Default to a valid value
     con = HomeController(this);
-    model = HomeModel(currentUser!);
+    modal = HomeModel(currentUser!);
   }
+
+  void callSetState(fn) => setState(fn);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Dice Betting Game'),
       ),
       body: bodyView(context),
       drawer: drawerView(context),
@@ -41,11 +47,13 @@ class HomeState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(model.user.email!),
+            Text(modal.user.email!),
             Text('Welcome to Dice Game!'),
             SizedBox(height: 20), // Adds spacing
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                con.onPressedEnterGameRoom(context);
+              },
               child: Text('Enter Game Room'),
             ),
           ],
@@ -60,7 +68,7 @@ class HomeState extends State<HomeScreen> {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text('No Profile'),
-            accountEmail: Text(model.user.email!),
+            accountEmail: const Text('user@example.com'),
           ),
           ListTile(
             leading: const Icon(Icons.logout),
