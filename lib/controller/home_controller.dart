@@ -1,7 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:lesson6/controller/auth_controller.dart';
 import 'package:lesson6/model/home_model.dart';
 import 'package:lesson6/view/home_screen.dart';
 import 'package:lesson6/view/game_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeController {
   late HomeState state;
@@ -23,10 +28,6 @@ class HomeController {
     );
   }
 
-  void signOut() async {
-    // Add your sign out logic
-  }
-
   void onPressedNewGame() {
     screenState.callSetState(() {
       screenState.model.newGame();
@@ -37,7 +38,7 @@ class HomeController {
     });
   }
 
-  void onPressedPlay() {
+  void onPressedPlay() async {
     screenState.callSetState(() {
       screenState.model.gameState = GameState.PLAYING;
       screenState.model.getGameResult();
@@ -91,6 +92,35 @@ class HomeController {
       //     : 'You lost \${-winAmount.abs()}';
       screenState.model.gameState = GameState.DONE;
     });
+    // Save data to Firestore after the game is played
+    String? userEmail = FirebaseAuth.instance.currentUser?.email;
+    if (userEmail != null) {
+      await saveToFirestore(userEmail);
+    } else {
+      // Handle case where email is null (e.g., show error or fallback)
+      print('User email is null');
+    }
+  }
+
+  // Add this function to save data to Firestore
+  Future<void> saveToFirestore(String email) async {
+    try {
+      // Get the Firestore collection reference
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Get the Firestore object from the model
+      Map<String, dynamic> data = screenState.model.toFirestoreObject(email);
+
+      // Add or update the game data in Firestore
+      await firestore
+          .collection('diceroll_game')
+          .add(data); // 'games' is the Firestore collection name
+
+      print('Game data saved successfully');
+    } catch (e) {
+      print('Error saving data to Firestore: $e');
+      // Handle any errors here, e.g., showing a UI error message
+    }
   }
 
   void onToggleShowKey(bool value) {
@@ -131,5 +161,9 @@ class HomeController {
 
   bool isNewGameEnabled() {
     return screenState.model.gameState != GameState.INIT;
+  }
+
+  Future<void> signOut() async {
+    await firebaseSignOut();
   }
 }

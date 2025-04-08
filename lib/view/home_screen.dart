@@ -77,7 +77,7 @@ class HomeState extends State<HomeScreen> {
         children: [
           UserAccountsDrawerHeader(
             accountName: const Text('No Profile'),
-            accountEmail: const Text('user@example.com'),
+            accountEmail: Text(modal.user.email!),
           ),
           ListTile(
             leading: const Icon(Icons.logout),
