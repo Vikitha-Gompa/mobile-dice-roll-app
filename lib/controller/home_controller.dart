@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:lesson6/controller/auth_controller.dart';
 import 'package:lesson6/model/home_model.dart';
 import 'package:lesson6/view/home_screen.dart';
-import 'package:lesson6/view/game_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -20,10 +19,36 @@ class HomeController {
 
   // Navigate to GameRoom
   void onPressedEnterGameRoom(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const GameScreen(),
+    screenState.callSetState(() {
+      screenState.isInGameRoom = true;
+      screenState.model.newGame(); // Optional: reset when entering
+    });
+  }
+
+  void onBackPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm'),
+        content: const Text('Are You Sure You Want To Exit Game'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.red, // Makes the text red
+            ), // Cancel
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              screenState.callSetState(() {
+                screenState.isInGameRoom = false; // Switch back to HomeBodyView
+              });
+            },
+            child: const Text('OK'),
+          ),
+        ],
       ),
     );
   }
