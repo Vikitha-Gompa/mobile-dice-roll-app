@@ -36,7 +36,7 @@ class HomeState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
-        automaticallyImplyLeading: false, // Don't show default back button
+        automaticallyImplyLeading: true, // Don't show default back button
         actions: isInGameRoom
             ? [
                 IconButton(
@@ -50,6 +50,7 @@ class HomeState extends State<HomeScreen> {
       ),
       body: isInGameRoom ? gameRoomView(context) : homeBodyView(context),
       drawer: drawerView(context),
+      // drawer: isInGameRoom ? null : drawerView(context),
     );
   }
 
@@ -91,7 +92,8 @@ class HomeState extends State<HomeScreen> {
         children: [
           Text(
             'Balance: \$${model.balance}'
-            '${(model.showKey) ? ' (key: \$${model.key})' : ''}',
+            ' '
+            '${(model.showKey) ? ' (key: ${model.key})' : ''}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
@@ -134,7 +136,7 @@ class HomeState extends State<HomeScreen> {
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                           color: Colors.yellow, width: 2),
-                                      borderRadius: BorderRadius.circular(5),
+                                      borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Text(
                                       line,
@@ -294,7 +296,7 @@ class HomeState extends State<HomeScreen> {
                 onPressed: con.isPlayEnabled() ? con.onPressedPlay : null,
                 child: const Text('Play'),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 15),
               ElevatedButton(
                 onPressed: con.isNewGameEnabled() ? con.onPressedNewGame : null,
                 child: const Text('New Game'),
@@ -307,6 +309,8 @@ class HomeState extends State<HomeScreen> {
   }
 
   Widget drawerView(BuildContext context) {
+    // print('drawerView called!');
+
     return Drawer(
       child: ListView(
         children: [
