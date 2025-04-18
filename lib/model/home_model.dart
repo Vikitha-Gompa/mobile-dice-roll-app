@@ -27,18 +27,18 @@ class GameModel {
     generateKey();
   }
 
-  void generateKey() {
-    key = Random().nextInt(6) + 1;
-  }
+  // void generateKey() {
+  //   key = Random().nextInt(6) + 1;
+  // }
   //int key = 1;
 
-  // void generateKey() {
-  //   int newKey;
-  //   do {
-  //     newKey = Random().nextInt(6) + 1;
-  //   } while (newKey == key); // Repeat if same as current key
-  //   key = newKey;
-  // }
+  void generateKey() {
+    int newKey;
+    do {
+      newKey = Random().nextInt(6) + 1;
+    } while (newKey == key); // Repeat if same as current key
+    key = newKey;
+  }
 
   int getGameResult() {
     final total = getEvenOddAmount() + getRangeAmount();
