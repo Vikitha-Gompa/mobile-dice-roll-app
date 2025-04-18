@@ -92,7 +92,7 @@ class HomeState extends State<HomeScreen> {
         children: [
           Text(
             'Balance: \$${model.balance}'
-            ' '
+            '   '
             '${(model.showKey) ? ' (key: ${model.key})' : ''}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),

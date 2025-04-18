@@ -27,8 +27,17 @@ class GameModel {
     generateKey();
   }
 
+  // void generateKey() {
+  //   key = Random().nextInt(6) + 1;
+  // }
+  //int key = 1;
+
   void generateKey() {
-    key = Random().nextInt(6) + 1;
+    int newKey;
+    do {
+      newKey = Random().nextInt(6) + 1;
+    } while (newKey == key); // Repeat if same as current key
+    key = newKey;
   }
 
   int getGameResult() {
@@ -74,7 +83,7 @@ class GameModel {
       'bet': betOnOddEven + betOnRange,
       'email': email,
       'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'win': 0,
+      'win': getEvenOddAmount() + getRangeAmount(),
     };
   }
 }
